@@ -24,13 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Build project
-        run: npm run build
-
-      - name: Upload build artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: .
 
   deploy:
     needs: build
