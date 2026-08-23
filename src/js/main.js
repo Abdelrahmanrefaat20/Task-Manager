@@ -3,6 +3,7 @@ const addBtnTask = document.getElementById("add-task-btn");
 const modalOverlay = document.getElementById("modal-overlay");
 const closeModalBtn = document.getElementById("close-modal-btn");
 const cancelBtn = document.getElementById("cancel-btn");
+const notificationContainer = document.getElementById("notification-container");
 addBtnTask.addEventListener("click", () => {
     taskIndex = -1;
     clearForm();
@@ -44,7 +45,7 @@ function createTask() {
         priority: taskPriority.value,
         dueDate: taskDueDate.value,
         description: taskDescription.value,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString(),
         status: Status.todo
     };
     TaskList.push(taskObj);
@@ -55,7 +56,7 @@ function display() {
     tasksTodo.innerHTML = "";
     tasksInProgress.innerHTML = "";
     tasksCompleted.innerHTML = "";
-    if (TaskList.length === 0) {
+    if (TaskList.filter(task => task.status === Status.todo).length === 0) {
         tasksTodo.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12 text-slate-400">
                 <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -63,6 +64,8 @@ function display() {
                 <p class="text-xs mt-1">Click + to add one</p>
             </div>
         `;
+    }
+    if (TaskList.filter(task => task.status === Status.inProgress).length === 0) {
         tasksInProgress.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12 text-slate-400">
                 <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -70,6 +73,8 @@ function display() {
                 <p class="text-xs mt-1">Click + to add one</p>
             </div>
         `;
+    }
+    if (TaskList.filter(task => task.status === Status.completed).length === 0) {
         tasksCompleted.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12 text-slate-400">
                 <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -77,7 +82,6 @@ function display() {
                 <p class="text-xs mt-1">Click + to add one</p>
             </div>
         `;
-        return;
     }
     TaskList.forEach((task, index) => {
         let priorityClass = "";
@@ -249,10 +253,8 @@ function display() {
             <span class="pointer-events-none">Start</span>
         </button>
     ` : ""}
-
-</div>
-
             </div>
+  </div>
         `;
         if (task.status === Status.todo) {
             tasksTodo.innerHTML += taskHTML;
@@ -288,10 +290,12 @@ submitBtn.addEventListener("click", (e) => {
         createTask();
         clearForm();
         closeModal();
+        showNotification("Task added successfully!", "success");
     }
     else {
         saveUpdate();
         clearForm();
+        showNotification("Task updated successfully!", "success");
     }
 });
 function changeStatus(id, newStatus) {
@@ -377,4 +381,13 @@ document.addEventListener("click", (e) => {
         return;
     updateTask(index);
 });
-clearForm();
+function showNotification(message, type) {
+    const colors = { success: "bg-green-500", error: "bg-red-600" };
+    notificationContainer.classList.remove("hidden", "bg-green-500", "bg-red-600");
+    notificationContainer.classList.add(colors[type]);
+    notificationContainer.innerHTML = message;
+    setTimeout(() => {
+        notificationContainer.innerHTML = "";
+        notificationContainer.classList.add("hidden");
+    }, 3000);
+}

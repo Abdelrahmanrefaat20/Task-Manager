@@ -2,12 +2,10 @@ const addBtnTask = document.getElementById("add-task-btn") as HTMLButtonElement;
 const modalOverlay = document.getElementById("modal-overlay") as HTMLDivElement;
 const closeModalBtn = document.getElementById("close-modal-btn") as HTMLButtonElement;
 const cancelBtn = document.getElementById("cancel-btn") as HTMLButtonElement;
-
+const notificationContainer =document.getElementById("notification-container") as HTMLDivElement;
 addBtnTask.addEventListener("click", () => {
     taskIndex = -1;
-
     clearForm();
-
     submitBtn.textContent = "Add Task";
     modalOverlay.classList.remove("hidden");
     modalOverlay.classList.add("flex");
@@ -59,7 +57,7 @@ function createTask(): void {
         priority: taskPriority.value as Priority,
         dueDate: taskDueDate.value,
         description: taskDescription.value,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString(),
         status: Status.todo
     };
 
@@ -76,7 +74,7 @@ function display(): void {
     tasksTodo.innerHTML = "";
     tasksInProgress.innerHTML = "";
     tasksCompleted.innerHTML = "";
-    if (TaskList.length === 0) {
+      if(TaskList.filter(task => task.status === Status.todo).length === 0) {
         tasksTodo.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12 text-slate-400">
                 <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -84,6 +82,9 @@ function display(): void {
                 <p class="text-xs mt-1">Click + to add one</p>
             </div>
         `;
+
+        }
+        if(TaskList.filter(task => task.status === Status.inProgress).length === 0) {
         tasksInProgress.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12 text-slate-400">
                 <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -91,6 +92,9 @@ function display(): void {
                 <p class="text-xs mt-1">Click + to add one</p>
             </div>
         `;
+
+        }
+        if(TaskList.filter(task => task.status === Status.completed).length === 0) {
         tasksCompleted.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12 text-slate-400">
                 <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
@@ -99,8 +103,8 @@ function display(): void {
             </div>
         `;
 
-        return;
     }
+
 
     TaskList.forEach((task, index) => {
         let priorityClass = "";
@@ -271,10 +275,8 @@ function display(): void {
             <span class="pointer-events-none">Start</span>
         </button>
     ` : ""}
-
-</div>
-
             </div>
+  </div>
         `;
         if (task.status === Status.todo) {
             tasksTodo.innerHTML += taskHTML;
@@ -317,9 +319,11 @@ submitBtn.addEventListener("click", (e) => {
         createTask();
         clearForm();
         closeModal();
+          showNotification("Task added successfully!", "success");
     } else {
         saveUpdate();
         clearForm();
+         showNotification("Task updated successfully!", "success"); 
     }
 });
 
@@ -437,4 +441,16 @@ document.addEventListener("click", (e) => {
     updateTask(index);
 
 });
-clearForm();
+
+
+function showNotification(message: string, type: "success" | "error") {
+    const colors = { success: "bg-green-500", error: "bg-red-600" };
+    notificationContainer.classList.remove("hidden", "bg-green-500", "bg-red-600");
+    notificationContainer.classList.add(colors[type]);
+    notificationContainer.innerHTML = message;
+
+    setTimeout(() => {
+        notificationContainer.innerHTML = "";
+        notificationContainer.classList.add("hidden");
+    }, 3000);
+}
