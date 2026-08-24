@@ -115,7 +115,7 @@ function display() {
                         </span>
                     </div>
 
-                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div class="flex items-center gap-1 opacity-100  lg:opacity-0 lg:group-hover:opacity-100">
 
                         <button 
                             class="edit-btn text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
@@ -190,7 +190,7 @@ function display() {
                     </div>
 
                 </div>
-
+<br>
 <!-- Action Buttons -->
 <div class="flex flex-wrap gap-2">
 
