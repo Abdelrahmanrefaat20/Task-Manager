@@ -183,6 +183,7 @@ function display(): void {
 
                     </span>
 
+
              ${task.status === 2 ? `
               <span class="bg-emerald-100 text-emerald-600 text-[10px] font-semibold px-2 py-1 rounded-full uppercase tracking-wide flex items-center gap-1">
               <i class="fa-solid fa-check"></i>
@@ -196,7 +197,7 @@ function display(): void {
 
 
                 <!-- Meta Info -->
-                <div class="flex items-center gap-3 text-xs text-slate-400 pb-3 mb-3 border-b border-slate-100">
+                <div class="flex items-center gap-3 text-xs text-slate-400 pb-3 mb-3 border-b border-slate-100 w-full">
 
                     <div class="flex items-center gap-1.5">
                         <i class="fa-regular fa-calendar"></i>
@@ -212,7 +213,6 @@ function display(): void {
                     </div>
 
                 </div>
-<br>
 <!-- Action Buttons -->
 <div class="flex flex-wrap gap-2">
 
